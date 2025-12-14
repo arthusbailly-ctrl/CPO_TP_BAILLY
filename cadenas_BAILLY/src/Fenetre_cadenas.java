@@ -1,5 +1,7 @@
 
+import static javax.management.Query.and;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -11,16 +13,35 @@ import javax.swing.JLabel;
  * @author ME
  */
 public class Fenetre_cadenas extends javax.swing.JFrame {
+ private final Jeu jeu;
+ private int tentative;
   private int nbcourant1;
   private int nbcourant2;
   private int nbcourant3;
   private int nbcourant4;
+
+    
+  
+    private int[] getCodeUtilisateur() {
+    int[] code = new int[4];
+
+    code[0] = Integer.parseInt(nb1.getText());
+    code[1] = Integer.parseInt(nb2.getText());
+    code[2] = Integer.parseInt(nb3.getText());
+    code[3] = Integer.parseInt(nb4.getText());
+
+    return code;
+}
+
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Fenetre_cadenas.class.getName());
 
     /**
      * Creates new form Fenetre_cadenas
      */
     public Fenetre_cadenas() {
+            jeu = new Jeu();  // création du jeu et génération du code secret
+    
         initComponents();
     }
     
@@ -41,10 +62,10 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
         btnH2 = new javax.swing.JButton();
         btnH3 = new javax.swing.JButton();
         btnH4 = new javax.swing.JButton();
-        btnB1 = new javax.swing.JButton();
-        btnB2 = new javax.swing.JButton();
-        btnB3 = new javax.swing.JButton();
         btnB4 = new javax.swing.JButton();
+        btnB3 = new javax.swing.JButton();
+        btnB2 = new javax.swing.JButton();
+        btnB1 = new javax.swing.JButton();
         nb1 = new javax.swing.JLabel();
         nb2 = new javax.swing.JLabel();
         nb3 = new javax.swing.JLabel();
@@ -56,6 +77,9 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
         tentatives = new javax.swing.JLabel();
         btnRecommencer = new javax.swing.JButton();
         btnTester = new javax.swing.JButton();
+        nbexact = new javax.swing.JLabel();
+        nbhaut = new javax.swing.JLabel();
+        nbbas = new javax.swing.JLabel();
 
         jButton1.setText("jButton1");
 
@@ -89,17 +113,10 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                             }
                         });
 
-                        btnB1.setText("\\/");
-                        btnB1.addActionListener(new java.awt.event.ActionListener() {
+                        btnB4.setText("\\/");
+                        btnB4.addActionListener(new java.awt.event.ActionListener() {
                             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnB1ActionPerformed(evt);
-                            }
-                        });
-
-                        btnB2.setText("\\/");
-                        btnB2.addActionListener(new java.awt.event.ActionListener() {
-                            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnB2ActionPerformed(evt);
+                                btnB4ActionPerformed(evt);
                             }
                         });
 
@@ -110,10 +127,17 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                             }
                         });
 
-                        btnB4.setText("\\/");
-                        btnB4.addActionListener(new java.awt.event.ActionListener() {
+                        btnB2.setText("\\/");
+                        btnB2.addActionListener(new java.awt.event.ActionListener() {
                             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnB4ActionPerformed(evt);
+                                btnB2ActionPerformed(evt);
+                            }
+                        });
+
+                        btnB1.setText("\\/");
+                        btnB1.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                btnB1ActionPerformed(evt);
                             }
                         });
 
@@ -146,7 +170,8 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                         pastouché.setText("Nombre de chiffres trop bas : ");
 
                         nbtentatives.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-                        nbtentatives.setText("nbtentatives");
+                        nbtentatives.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                        nbtentatives.setText("0");
                         nbtentatives.setBorder(new javax.swing.border.MatteBorder(null));
 
                         tentatives.setText("Tentatives :");
@@ -166,12 +191,18 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                             }
                         });
 
+                        nbexact.setText("0");
+
+                        nbhaut.setText("0");
+
+                        nbbas.setText("0");
+
                         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
                         getContentPane().setLayout(layout);
                         layout.setHorizontalGroup(
                             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(206, Short.MAX_VALUE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnTester)
                                 .addGap(152, 152, 152)
                                 .addComponent(tentatives)
@@ -179,34 +210,46 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(24, 24, 24)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(pastouché2)
-                                    .addComponent(pastouché1)
-                                    .addComponent(pastouché))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnRecommencer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(nbtentatives, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(26, 26, 26))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(pastouché)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(nbbas)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnRecommencer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(nbtentatives, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(26, 26, 26))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(pastouché2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(nbexact))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(pastouché1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nbhaut)))
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(btnH1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                                    .addComponent(btnB4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnB1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(nb1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(btnH2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                                     .addComponent(nb2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnB3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(btnB2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(btnH3, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                                     .addComponent(nb3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnB2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(btnB3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(nb4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnB1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                                    .addComponent(btnB4, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                                     .addComponent(btnH4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         );
@@ -227,10 +270,10 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                                     .addComponent(nb1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnB1)
-                                    .addComponent(btnB2)
+                                    .addComponent(btnB4)
                                     .addComponent(btnB3)
-                                    .addComponent(btnB4))
+                                    .addComponent(btnB2)
+                                    .addComponent(btnB1))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tentatives)
@@ -238,13 +281,18 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(nbtentatives, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(4, 4, 4)
-                                .addComponent(pastouché2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(pastouché2)
+                                    .addComponent(nbexact))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pastouché1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(pastouché1)
+                                    .addComponent(nbhaut))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(pastouché)
-                                    .addComponent(btnRecommencer))
+                                    .addComponent(btnRecommencer)
+                                    .addComponent(nbbas))
                                 .addContainerGap(19, Short.MAX_VALUE))
                         );
 
@@ -267,45 +315,106 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
         nbcourant2++;
     }else{
         nbcourant2 = 0;}
-        nb1.setText(nbcourant2+"");    
+        nb2.setText(nbcourant2+"");    
     }//GEN-LAST:event_btnH2ActionPerformed
 
     private void btnH3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnH3ActionPerformed
         // TODO add your handling code here:
+                if (nbcourant3 < 9){
+        nbcourant3++;
+    }else{
+        nbcourant3 = 0;}
+        nb3.setText(nbcourant3+"");    
+              
         
     }//GEN-LAST:event_btnH3ActionPerformed
 
     private void btnH4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnH4ActionPerformed
         // TODO add your handling code here:
-        
+                        if (nbcourant4 < 9){
+        nbcourant4++;
+    }else{
+        nbcourant4 = 0;}
+        nb4.setText(nbcourant4+"");    
+          
     }//GEN-LAST:event_btnH4ActionPerformed
-
-    private void btnB4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB4ActionPerformed
-        // TODO add your handling code here:
-      
-    }//GEN-LAST:event_btnB4ActionPerformed
-
-    private void btnB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB3ActionPerformed
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_btnB3ActionPerformed
-
-    private void btnB2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB2ActionPerformed
-        // TODO add your handling code here:
-    
-    }//GEN-LAST:event_btnB2ActionPerformed
 
     private void btnB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB1ActionPerformed
         // TODO add your handling code here:
-  
+        if (nbcourant1 > 0) {
+        nbcourant1--;
+    } else {
+        // si on est déjà à 0, on revient à 9
+        nbcourant1 = 9;
+    }
+
+    nb1.setText(nbcourant1 + ""); 
     }//GEN-LAST:event_btnB1ActionPerformed
+
+    private void btnB2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB2ActionPerformed
+        // TODO add your handling code here:
+        if (nbcourant2 > 0) {
+        nbcourant2--;
+    } else {
+        // si on est déjà à 0, on revient à 9
+        nbcourant2 = 9;
+    }
+
+    nb2.setText(nbcourant2 + ""); 
+    }//GEN-LAST:event_btnB2ActionPerformed
+
+    private void btnB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB3ActionPerformed
+        // TODO add your handling code here:
+        if (nbcourant3 > 0) {
+        nbcourant3--;
+    } else {
+        // si on est déjà à 0, on revient à 9
+        nbcourant3 = 9;
+    }
+
+    nb3.setText(nbcourant3 + ""); 
+    }//GEN-LAST:event_btnB3ActionPerformed
+
+    private void btnB4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB4ActionPerformed
+        // TODO add your handling code here:
+        if (nbcourant4 > 0) {
+        nbcourant4--;
+    } else {
+        // si on est déjà à 0, on revient à 9
+        nbcourant4 = 9;
+    }
+
+    nb4.setText(nbcourant4 + ""); 
+    }//GEN-LAST:event_btnB4ActionPerformed
 
     private void btnTesterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesterActionPerformed
         // TODO add your handling code here:
+    tentative++;
+    int[] secret = jeu.getSecret();            // code secret venant de la classe métier
+    int[] saisie = getCodeUtilisateur();       // code que l'utilisateur a entré
+
+    boolean correct = true;
+
+    for (int i = 0; i < 4; i++) {
+        if (secret[i] != saisie[i]) {
+            correct = false;
+        }
+    }
+
+    if (correct) {
+        JOptionPane.showMessageDialog(this, "Bravo ! Code correct !");
+    }
+    calculerCompteurs();
+    nbtentatives();
+    nbtentatives.setText(String.valueOf(tentative));
+    
+    
+
     }//GEN-LAST:event_btnTesterActionPerformed
 
     private void btnRecommencerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecommencerActionPerformed
         // TODO add your handling code here:
+        reinitialiserJeu();
     }//GEN-LAST:event_btnRecommencerActionPerformed
 
     /**
@@ -349,10 +458,65 @@ public class Fenetre_cadenas extends javax.swing.JFrame {
     private javax.swing.JLabel nb2;
     private javax.swing.JLabel nb3;
     private javax.swing.JLabel nb4;
+    private javax.swing.JLabel nbbas;
+    private javax.swing.JLabel nbexact;
+    private javax.swing.JLabel nbhaut;
     private javax.swing.JLabel nbtentatives;
     private javax.swing.JLabel pastouché;
     private javax.swing.JLabel pastouché1;
     private javax.swing.JLabel pastouché2;
     private javax.swing.JLabel tentatives;
     // End of variables declaration//GEN-END:variables
+
+    private void calculerCompteurs() {
+int[] secret = jeu.getSecret();
+int[] saisie = getCodeUtilisateur();
+        int exact = 0;
+    int tropHaut = 0;
+    int tropBas = 0;
+
+    for (int i = 0; i < 4; i++) {
+        if (saisie[i] == secret[i]) {
+            exact++;
+        } else if (saisie[i] > secret[i]) {
+            tropHaut++;
+        } else {
+            tropBas++;
+        }
+    }
+
+    nbexact.setText(String.valueOf(exact));
+    nbhaut.setText(String.valueOf(tropHaut));
+    nbbas.setText(String.valueOf(tropBas));
+    }
+    
+    
+private void nbtentatives() {
+
+    // si 10 tentatives → fin du jeu
+    if (tentative >= 10) {
+        JOptionPane.showMessageDialog(this, "Échec ! Vous avez atteint les 10 tentatives.");
+        btnTester.setEnabled(false); // désactivation du bouton Tester
+    }}
+private void reinitialiserJeu() {
+
+    // Régénérer un nouveau code secret
+    jeu.genererCombinaison();
+    nbtentatives.setText("0");
+nbtentatives.setText("0");
+
+    tentative = 0;
+    nb1.setText("0");
+    nb2.setText("0");
+    nb3.setText("0");
+    nb4.setText("0");
+
+
+    nbexact.setText("0");
+    nbhaut.setText("0");
+    nbbas.setText("0");
+   
+    btnTester.setEnabled(true);
+}
+
 }
